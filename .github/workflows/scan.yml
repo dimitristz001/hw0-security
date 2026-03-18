@@ -1,4 +1,4 @@
-name: Busybox Vulnerability Scan
+name: Busybox Vulnerability scan 
 
 on:
   push:
@@ -7,19 +7,29 @@ on:
   workflow_dispatch:
 
 jobs:
-  docker-scan:
+  scan:
     runs-on: ubuntu-latest
+
     steps:
+      #checkout repo
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Log in to GitHub Container Registry
+      #Log in GitHub Container Registry
+      - name: Log in to GHCR
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run Docker Scout scan on Busybox
+      #Install Docker Scout
+      - name: Install Docker Scout
+        run: |
+          sudo apt update
+          sudo apt install -y docker-scout-plugin
+
+      #Scan the  image
+      - name: Scan Docker image
         run: |
           docker scout cves ghcr.io/dimitristz001/busybox-test:latest
