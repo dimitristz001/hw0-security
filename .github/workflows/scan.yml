@@ -1,4 +1,4 @@
-name: Busybox Vulnerability scan 
+name: Busybox Vulnerability scan
 
 on:
   push:
@@ -26,10 +26,11 @@ jobs:
       #Install Docker Scout
       - name: Install Docker Scout
         run: |
-          sudo apt update
-          sudo apt install -y docker-scout-plugin
+          #Shecking for  docker
+          docker --version
+          #install scout plugin
+          docker scout version || docker plugin install docker/scout:latest
 
-      #Scan the  image
       - name: Scan Docker image
         run: |
           docker scout cves ghcr.io/dimitristz001/busybox-test:latest
